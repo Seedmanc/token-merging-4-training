@@ -1,20 +1,16 @@
-def subsume(tags):
-    """Remove tags that are suffixes or prefixes of other tags."""
-    tags = list(set(tags))
-    kept_tags = []
-    for tag in tags:
-        found = any([(t.endswith(tag) or t.startswith(tag)) and t != tag for t in tags])
-        if not found and tag != '':
-            kept_tags.append(tag)
-    return kept_tags
+import logging as log
+from collections import defaultdict
+
 
 def merge(tags, colors):
-    """Merge two-word tags with the same noun into one tag with combined adjectives."""
-    from collections import defaultdict
+    """Merge several tags with the same noun into one tag with combined adjectives."""
     tags = list(set(tags))
+    multi = {'multicolored', 'two-tone'}
     tree = defaultdict(list)
+
     for tag in tags:
-        if '(' in tag:
+        if '(' in tag:  # skip character names (usually have series in brackets)
+            log.info(f'skip  {tag}  b/c (...)')
             continue
         words = tag.split(' ')
         if len(words) == 2:
@@ -23,13 +19,33 @@ def merge(tags, colors):
             for t in tags:
                 if t != tag and t.endswith(noun) and len(t.split(' ')) == 2:
                     tree[noun].append(adj)
-    for noun, adjs in tree.items():
-        if 'multicolored' in adjs and noun == 'hair':
-            adjs = [adj for adj in adjs if adj not in colors]
-        for adj in adjs:
-            tag_to_remove = f"{adj} {noun}"
-            if tag_to_remove in tags:
-                tags.remove(tag_to_remove)
-        merged = list(set(adjs))
+
+    for noun in tree.keys():
+        if any([clr in multi for clr in tree[noun]]):
+            removed_colors = [adj for adj in tree[noun] if adj in colors]
+            tree[noun] = [adj for adj in tree[noun] if adj not in colors]
+            log.info('- ' + ', '.join(removed_colors) + '  b/c multicolored')
+
+        for adj in tree[noun]:
+            try:
+                tags.remove(adj + ' ' + noun)
+                log.info(' - ' + adj + ' ' + noun)
+            except Exception:
+                pass
+        merged = sorted(list(set(tree[noun])))
+        log.info('+ ' + ' '.join(merged) + ' ' + noun)
         tags.append(' '.join(merged) + ' ' + noun)
+
+    return tags
+
+
+def omit_parts(tags, animals):
+    # Remove animal bodyparts if that animal is mentioned as a girl
+    found_animals = [t for t in tags if t.endswith(" girl")]
+    for kemono in found_animals:
+        animal = kemono.split(' ')[0]
+        if animal in animals:
+            removed_tags = [t for t in tags if t.startswith(animal + ' ') and not t.endswith(' girl')]
+            tags = [t for t in tags if not t.startswith(animal + ' ') or t.endswith(' girl')]
+            log.info('- ' + (', '.join(removed_tags)) + '  b/c  ' + kemono)
     return tags

@@ -1,7 +1,12 @@
-import logging
+import logging as log
 
-def setup_logging():
-    logging.basicConfig(level=logging.INFO, format='%(levelname)s:%(message)s')
+import yaml
+
+
+def setup_logging(level='INFO'):
+    log.basicConfig(level=getattr(log, level), format='%(message)s')
+
 
 def load_yaml_config(file):
-    pass
+    with open('config\\' + file) as stream:
+        return yaml.safe_load(stream)
