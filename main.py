@@ -9,7 +9,7 @@ from pipeline import process_tags
 
 def read_tags_from_file(filename):
     with open(filename, "r", encoding="utf-8") as f:
-        return [tag.strip() for tag in re.split('\s*,\s*', f.read()) if tag != '']
+        return [tag.strip() for tag in re.split(r'\s*,\s*', f.read()) if tag != '']
 
 
 def write_tags_to_file(filename, tags):

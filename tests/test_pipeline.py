@@ -6,5 +6,3 @@ def test_pipeline_basic():
     assert "commentary request" not in processed
     assert any("long white hair" in t for t in processed)
     assert "hair" not in processed
-
-test_pipeline_basic()
