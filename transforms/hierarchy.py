@@ -3,6 +3,7 @@ import re
 
 
 def apply_synonym_replacement(tag, all_tags, synonym_dict):
+    log.debug(':REPLACE')
     for key, value in synonym_dict.items():
         if value in ','.join(all_tags) and '(' not in tag:
             pattern = r'(^|\s)' + re.escape(key) + r'($|\s)'
@@ -14,6 +15,7 @@ def apply_synonym_replacement(tag, all_tags, synonym_dict):
 
 
 def subsume(tags):
+    log.debug(':SUBSUME')
     """Remove single-word tags that are suffixes or prefixes of other tags."""
     tags = list(set(tags))
     kept_tags = []
@@ -27,6 +29,7 @@ def subsume(tags):
 
 
 def specify_animal(tags, animals):
+    log.debug(":SPECIFY")
     # Replace generic "animal" bodyparts with specific ones
     animal_parts = []
     for t in tags:
