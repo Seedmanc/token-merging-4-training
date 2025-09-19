@@ -44,7 +44,7 @@ def multicolor(tags, colors):
     for m in multi:
         parts = [re.sub(m+r'\s(.+)',r'\1',t) for t in tags if t.startswith(m+' ')]
         removed_tags = [t for t in tags if t.split(' ')[0] in colors and t.split(' ')[-1] in parts]
-        if (len(parts)>0):
+        if len(parts) > 0:
             log.info('- '+','.join(removed_tags)+'  b/c '+m)
         else:
             continue
