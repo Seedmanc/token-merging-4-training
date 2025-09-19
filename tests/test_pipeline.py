@@ -4,4 +4,7 @@ def test_pipeline_basic():
     tags = ["long hair", "hair", "white hair", "commentary request"]
     processed = process_tags(tags)
     assert "commentary request" not in processed
-    assert any("hair" in t for t in processed)
+    assert any("long white hair" in t for t in processed)
+    assert "hair" not in processed
+
+test_pipeline_basic()
