@@ -10,5 +10,5 @@ def setup_logging(level='INFO'):
 
 def load_yaml_config(file):
     ROOT = pathlib.Path(__file__).resolve().parent
-    with open(str(ROOT)+'\\config\\' + file) as stream:
+    with open(str(ROOT)+'/config/' + file) as stream:
         return yaml.safe_load(stream)
