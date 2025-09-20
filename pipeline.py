@@ -1,12 +1,12 @@
 from transforms.filters import remove_blacklisted, clip_after_series, remove_series
-from transforms.hierarchy import subsume, specify_animal
-from transforms.redundancy import merge, omit_parts, multicolor
+from transforms.hierarchy import subsume, specify_animal, replace_synonym
+from transforms.redundancy import merge, omit_parts, multicolor, join
 from utils import load_yaml_config
 
 
 def process_tags(tags):
     blacklist = load_yaml_config('blacklist.yaml')
-    synonyms = load_yaml_config('synonyms.yaml')['synonyms']
+    synonyms = load_yaml_config('synonyms.yaml')
     colors = load_yaml_config('colors.yaml')
     animals = load_yaml_config('animals.yaml')
 
@@ -15,8 +15,8 @@ def process_tags(tags):
     tags = remove_blacklisted(tags, blacklist)
     tags = clip_after_series(tags)
     tags = remove_series(tags)
-    # Synonym replacement
-    # tags = [apply_synonym_replacement(tag, tags, synonyms) for tag in tags]
+    # Replace ambiguous overarching words by specific synonyms if they're already present (for merging later)
+    tags = replace_synonym(tags, synonyms)
     # Remove redundant tags "gloves, yellow gloves" => yellow gloves
     tags = subsume(tags)
     # Remove generic "animal *" body parts if specific animal part exists
@@ -28,4 +28,7 @@ def process_tags(tags):
     print('Merging...')
     # Merge tags "short hair, black hair" => "short black hair"
     tags = merge(tags)
+    # Join tags that end and start with same word
+    tags = join(tags)
+
     return tags

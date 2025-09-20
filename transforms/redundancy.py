@@ -35,6 +35,34 @@ def merge(tags):
 
     return tags
 
+def join(tags): #todo refactor
+    log.debug(':JOIN')
+    # white fur, fur trim => white fur trim
+    heads ={t.split(' ')[0] for t in tags if re.match(r'^.+\s', t) and len(t.split(' ')) == 2}
+    tails ={t.split(' ')[-1] for t in tags if re.search(r'\s.+$', t) and len(t.split(' ')) == 2}
+    both = {h for h in heads if h in tails}
+    for b in both:
+        tails = list({t for t in tags if t.startswith(b+' ') and len(t.split(' ')) == 2})
+        heads = list({t for t in tags if t.endswith(' '+b) and len(t.split(' ')) == 2})
+        minlen = min(len(heads),len(tails))
+        tails= tails[:minlen]
+        heads= heads[:minlen]
+        for h in heads:
+            try:
+                tags.remove(h)
+                log.info(' - ' + h)
+            except Exception:
+                pass
+            for t in tails:
+                try:
+                    tags.remove(t)
+                    log.info(' - ' + t)
+                except Exception:
+                    pass
+                add = (h+t).replace(b+b,b)
+                tags.append(add)
+                log.info('+ '+add)
+    return tags
 
 def multicolor(tags, colors):
     log.debug(':MULTI')
