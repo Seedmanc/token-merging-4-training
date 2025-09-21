@@ -21,6 +21,8 @@ def write_tags_to_file(filename, tags):
 
 if __name__ == "__main__":
     utils.setup_logging('DEBUG')
+    for name in ['blacklist', 'synonyms', 'colors', 'animals']:
+        utils.load_yaml_config(name)
     search_pattern = sys.argv[1] + "\\*.txt"
     for file_path in glob.glob(search_pattern):
         log.info("FILE: " + file_path.split('\\')[-1])

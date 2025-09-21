@@ -1,4 +1,5 @@
 from transforms.redundancy import merge, multicolor, omit_parts
+from utils import  dicts
 
 def test_merge():
     processed = merge(['long hair', 'white hair', 'very short hair'])
@@ -8,7 +9,8 @@ def test_merge():
     assert "very short hair" in processed
 
 def test_multicolor():
-    processed = multicolor(['red hair', 'white hair','multicolored hair', 'black skirt', 'other skirt'],['white','red'])
+    dicts['colors'] = ['white','red']
+    processed = multicolor(['red hair', 'white hair','multicolored hair', 'black skirt', 'other skirt'])
     assert 'red hair' not in processed
     assert 'white hair' not in processed
     assert 'multicolored hair' in processed
@@ -16,7 +18,8 @@ def test_multicolor():
     assert 'other skirt' in processed
 
 def test_omit_parts():
-    processed = omit_parts(['cat girl', 'cat tail', 'dog ears', 'other girl', 'other part'],['cat','dog'])
+    dicts['animals'] = ['cat','dog']
+    processed = omit_parts(['cat girl', 'cat tail', 'dog ears', 'other girl', 'other part'])
     assert 'cat tail' not in processed
     assert 'dog ears' in processed
     assert 'other part' in processed

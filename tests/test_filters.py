@@ -1,8 +1,9 @@
 from transforms.filters import remove_blacklisted, clip_after_series, remove_series
+from utils import dicts
 
 def test_remove_blacklisted():
-    processed = remove_blacklisted(['normal tag','blacklisted tag', 'another blacklisted', 'another normal'],
-                                   ['blacklisted tag', 'another blacklisted'])
+    dicts['blacklist'] = ['blacklisted tag', 'another blacklisted']
+    processed = remove_blacklisted(['normal tag','blacklisted tag', 'another blacklisted', 'another normal'])
     assert "normal tag" in processed
     assert "another normal" in processed
     assert "blacklisted tag" not in processed

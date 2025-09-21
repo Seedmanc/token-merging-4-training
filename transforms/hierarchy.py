@@ -1,12 +1,14 @@
 import logging as log
 import re
 
+from utils import dicts
 
-def replace_synonym(tags, synonyms): #todo refactor
+
+def replace_synonym(tags): #todo refactor
     log.debug(':REPLACE')
     # brown footwear, boots => brown boots, boots
     def replacer(tag):
-        for key, value in synonyms.items():
+        for key, value in dicts['synonyms'].items():
             if (value in tags or (' '+value) in tags) and '(' not in tag:
                 pattern = r'(^|\s)' + re.escape(key) + r'($|\s)'
                 replacement = r'\1' + value + r'\2'
@@ -32,7 +34,7 @@ def subsume(tags):
     return kept_tags
 
 
-def specify_animal(tags, animals):
+def specify_animal(tags):
     log.debug(":SPECIFY")
     # Replace generic "animal" bodyparts with specific ones
     animal_parts = []
@@ -41,8 +43,8 @@ def specify_animal(tags, animals):
             animal_parts.append(t)
     for ap in animal_parts:
         part = ap.split(' ')[1]
-        if any([animal + ' ' + part in tags for animal in animals]):
+        if any([animal + ' ' + part in tags for animal in dicts['animals']]):
             tags.remove('animal ' + part)
             log.info(
-                '- animal ' + part + '  b/c  ' + ''.join([a for a in animals if a + ' ' + part in tags]) + ' ' + part)
+                '- animal ' + part + '  b/c  ' + ''.join([a for a in dicts['animals'] if a + ' ' + part in tags]) + ' ' + part)
     return tags

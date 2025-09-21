@@ -2,6 +2,8 @@ import logging as log
 import re
 from collections import defaultdict
 
+from utils import dicts
+
 
 def merge(tags):
     log.debug(':MERGE')
@@ -64,14 +66,14 @@ def join(tags): #todo refactor
                 log.info('+ '+add)
     return tags
 
-def multicolor(tags, colors):
+def multicolor(tags):
     log.debug(':MULTI')
     """Remove colored objects if those are mentioned as multicolored."""
     multi = {'multicolored', 'two-tone'}
 
     for m in multi:
         parts = [re.sub(m+r'\s(.+)',r'\1',t) for t in tags if t.startswith(m+' ')]
-        removed_tags = [t for t in tags if t.split(' ')[0] in colors and t.split(' ')[-1] in parts]
+        removed_tags = [t for t in tags if t.split(' ')[0] in dicts['colors'] and t.split(' ')[-1] in parts]
         if len(parts) > 0:
             log.info('- '+','.join(removed_tags)+'  b/c '+m)
         else:
@@ -80,13 +82,13 @@ def multicolor(tags, colors):
     return tags
 
 
-def omit_parts(tags, animals):
+def omit_parts(tags):
     log.debug(':OMIT')
     # Remove animal bodyparts if that animal is mentioned as a girl
     found_animals = [t for t in tags if t.endswith(" girl")]
     for kemono in found_animals:
         animal = kemono.split(' ')[0]
-        if animal in animals:
+        if animal in dicts['animals']:
             removed_tags = [t for t in tags if t.startswith(animal + ' ') and not t.endswith(' girl')]
             tags = [t for t in tags if not t.startswith(animal + ' ') or t.endswith(' girl')]
             log.info('- ' + (','.join(removed_tags)) + '  b/c  ' + kemono)

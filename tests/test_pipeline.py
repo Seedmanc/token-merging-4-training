@@ -1,6 +1,10 @@
+import utils
 from pipeline import process_tags
 
+
 def test_pipeline():
+    for name in ['blacklist', 'synonyms', 'colors', 'animals']:
+        utils.load_yaml_config(name)
     tags = ["long hair", "hair", "white hair", "commentary request", "red shirt", "sleeveless shirt",
      "multicolored shirt", "dog tail", "dog girl", "animal tail", "serval (kemono friends) (derp)", "kemono friends"]
     processed = process_tags(tags)

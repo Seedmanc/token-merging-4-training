@@ -1,4 +1,5 @@
 from transforms.hierarchy import subsume, specify_animal
+from utils import dicts
 
 def test_subsume():
     processed = subsume(['noun', 'adjective noun', 'word postfix', 'word'])
@@ -8,7 +9,8 @@ def test_subsume():
     assert "word" not in processed
 
 def test_specify_animal():
-    processed = specify_animal(['animal ears', 'cat ears', 'animal tail', 'long tail', 'animal paws'], ['cat','dog'])
+    dicts['animals'] = ['cat','dog']
+    processed = specify_animal(['animal ears', 'cat ears', 'animal tail', 'long tail', 'animal paws'])
     assert "cat ears" in processed
     assert "animal tail" in processed
     assert "long tail" in processed

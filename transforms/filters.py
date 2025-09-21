@@ -1,9 +1,11 @@
 import logging as log
 import re
 
+from utils import dicts
 
-def remove_blacklisted(tags, blacklist):
-    return [tag for tag in tags if tag not in blacklist]
+
+def remove_blacklisted(tags):
+    return [tag for tag in tags if tag not in dicts['blacklist']]
 
 
 def clip_after_series(tags):  # remove after first group of () removing fan chars' authors like "name (series) (author)"
