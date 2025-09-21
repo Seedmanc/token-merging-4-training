@@ -93,3 +93,26 @@ def omit_parts(tags):
             tags = [t for t in tags if not t.startswith(animal + ' ') or t.endswith(' girl')]
             log.info('- ' + (','.join(removed_tags)) + '  b/c  ' + kemono)
     return tags
+
+def andjoin(tags):
+    log.debug(':ANDJOIN')
+    # yellow hair, yellow boots => yellow hair and boots
+    tree = defaultdict(list)
+    for t in tags:
+        pair = t.split(' ')
+        if len(pair) == 2:
+            tree[pair[0]].append(pair[1])
+
+    for adj,nouns in tree.items():
+        if (len(nouns) == 2):
+            try:
+                toremove = ' '.join(nouns)
+                tags.remove(adj+' '+nouns[0])
+                tags.remove(adj+' '+nouns[1])
+                log.info(' - '+adj+' '+nouns[0]+','+adj+' '+nouns[1])
+                toadd =' '.join([adj,' and '.join(sorted(nouns))])
+                tags.append(toadd)
+                log.info('+ '+ toadd)
+            except Exception:
+                pass
+    return tags

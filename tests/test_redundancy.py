@@ -1,4 +1,4 @@
-from transforms.redundancy import merge, multicolor, omit_parts
+from transforms.redundancy import merge, multicolor, omit_parts, andjoin
 from utils import  dicts
 
 def test_merge():
@@ -23,3 +23,10 @@ def test_omit_parts():
     assert 'cat tail' not in processed
     assert 'dog ears' in processed
     assert 'other part' in processed
+
+def test_andjoin():
+    processed = andjoin(['yellow boots', 'yellow hair', 'shirt'])
+    assert 'yellow boots' not in processed
+    assert 'yellow hair' not in processed
+    assert 'shirt' in processed
+    assert 'yellow boots and hair' in processed
