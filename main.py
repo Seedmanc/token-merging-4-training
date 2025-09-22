@@ -25,7 +25,7 @@ if __name__ == "__main__":
         utils.load_yaml_config(name)
     search_pattern = sys.argv[1] + "\\*.txt"
     for file_path in glob.glob(search_pattern):
-        log.info("FILE: " + file_path.split('\\')[-1])
+        log.info("\nFILE: " + file_path.split('\\')[-1])
         input_tags = read_tags_from_file(file_path)
         log.info(input_tags)
         before = ','.join(input_tags)

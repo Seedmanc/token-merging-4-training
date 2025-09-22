@@ -4,7 +4,7 @@ import re
 from utils import dicts
 
 
-def replace_synonym(tags): #todo refactor
+def replace_synonym(tags): #todo refactor, unused
     log.debug(':REPLACE')
     # brown footwear, boots => brown boots, boots
     def replacer(tag):
@@ -36,7 +36,7 @@ def subsume(tags):
 
 def specify_animal(tags):
     log.debug(":SPECIFY")
-    # Replace generic "animal" bodyparts with specific ones
+    # Drop generic "animal" bodyparts if specific exist
     animal_parts = []
     for t in tags:
         if (len(t.split(' ')) == 2) and t.startswith('animal '):

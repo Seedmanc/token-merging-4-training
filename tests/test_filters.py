@@ -1,4 +1,4 @@
-from transforms.filters import remove_blacklisted, clip_after_series, remove_series
+from transforms.filters import remove_blacklisted, clip_after_series, remove_series, alternate_costume
 from utils import dicts
 
 def test_remove_blacklisted():
@@ -17,7 +17,12 @@ def test_clip_after_series():
     assert 'tag with (two) (brackets)' not in processed
 
 def test_remove_series():
-    processed = remove_series(['normal tag', 'tag with (series)', 'series'])
+    processed = remove_series(['normal tag', 'tag with (series)', 'series', 'series 2'])
     assert 'normal tag' in processed
     assert 'tag with (series)' in processed
     assert 'series' not in processed
+    assert 'series 2' not in processed
+
+def test_alternate_costume():
+    processed = alternate_costume(['official alternate costume'])
+    assert processed[0] == 'alternate costume'

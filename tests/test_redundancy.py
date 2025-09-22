@@ -2,11 +2,17 @@ from transforms.redundancy import merge, multicolor, omit_parts, andjoin
 from utils import  dicts
 
 def test_merge():
-    processed = merge(['long hair', 'white hair', 'very short hair'])
+    tags = sorted(['long hair', 'white hair', 'very short hair', 'solo'])
+    processed = merge(tags)
     assert "long white hair" in processed
     assert "long hair" not in processed
     assert "white hair" not in processed
     assert "very short hair" in processed
+    tags.remove('solo')
+    tags.append('2girls')
+    processed = merge(tags)
+    assert ','.join(sorted(tags)) == ','.join(sorted(processed))
+
 
 def test_multicolor():
     dicts['colors'] = ['white','red']

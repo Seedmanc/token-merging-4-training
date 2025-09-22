@@ -2,17 +2,21 @@ import logging as log
 import re
 from collections import defaultdict
 
-from utils import dicts
+from utils import dicts, is_solo
 
 
-def merge(tags):
+def merge(tags): #todo decide order: hair pink bow vs pink hair bow
     log.debug(':MERGE')
     """Merge several tags with the same noun into one tag with combined adjectives."""
     tags = list(set(tags))
+
+    if not is_solo(tags):
+        log.info('skip merging b/c multiple charas')
+        return tags
     tree = defaultdict(list)
 
     for tag in tags:
-        if '(' in tag:  # skip character names (usually have series in brackets)
+        if '(' in tag:  # skip character names (usually have series in parenthesis)
             log.debug(f'skip  {tag}  b/c (...)')
             continue
         words = tag.split(' ')
@@ -37,7 +41,7 @@ def merge(tags):
 
     return tags
 
-def join(tags): #todo refactor
+def join(tags): #todo refactor,unused as of now
     log.debug(':JOIN')
     # white fur, fur trim => white fur trim
     heads ={t.split(' ')[0] for t in tags if re.match(r'^.+\s', t) and len(t.split(' ')) == 2}
@@ -68,7 +72,7 @@ def join(tags): #todo refactor
 
 def multicolor(tags):
     log.debug(':MULTI')
-    """Remove colored objects if those are mentioned as multicolored."""
+    """Remove colored objects if those are mentioned as multicolored.""" #todo keep one color along with multicolored?
     multi = {'multicolored', 'two-tone'}
 
     for m in multi:
@@ -96,7 +100,7 @@ def omit_parts(tags):
 
 def andjoin(tags):
     log.debug(':ANDJOIN')
-    # yellow hair, yellow boots => yellow hair and boots
+    # yellow hair, yellow boots => yellow hair and boots #todo check if the confusion is worth the tokens
     tree = defaultdict(list)
     for t in tags:
         pair = t.split(' ')
