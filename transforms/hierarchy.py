@@ -19,6 +19,10 @@ def replace_synonym(tags): #todo refactor, unused
         return tag
     return [replacer(t) for t in tags]
 
+def _includes_or_plural(needle, haystack): # makes 'fishnets' be recognized as a part of 'fishnet pantyhose'
+    # TODO: bug: makes 'shorts' to be considered a part of 'short hair'
+    return haystack.endswith(' ' + needle) or haystack.startswith(needle + ' ') or\
+           (haystack+'s').endswith(' ' + needle) or haystack.startswith(re.sub('s$','',needle)+' ')
 
 def subsume(tags):
     log.debug(':SUBSUME')
@@ -26,13 +30,12 @@ def subsume(tags):
     tags = list(set(tags))
     kept_tags = []
     for tag in tags:
-        found = [t for t in tags if (t.endswith(' ' + tag) or t.startswith(tag + ' '))]
+        found = [t for t in tags if _includes_or_plural(tag, t)]
         if len(found) > 0 and ' ' not in tag:
             log.info(f'- {tag}  b/c  {found[0]}')
         else:
             kept_tags.append(tag)
     return kept_tags
-
 
 def specify_animal(tags):
     log.debug(":SPECIFY")

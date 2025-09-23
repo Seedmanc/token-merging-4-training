@@ -100,7 +100,7 @@ def omit_parts(tags):
 
 def andjoin(tags):
     log.debug(':ANDJOIN')
-    # yellow hair, yellow boots => yellow hair and boots #todo check if the confusion is worth the tokens
+    # yellow hair, yellow boots => yellow hair and boots #todo check if the confusion is worth the tokens saved
     tree = defaultdict(list)
     for t in tags:
         pair = t.split(' ')
@@ -119,4 +119,11 @@ def andjoin(tags):
                 log.info('+ '+ toadd)
             except Exception:
                 pass
+
+    bow_and_tie = [t for t in tags if t.endswith(' bow and bowtie') and 'hair bow' not in t]
+    if (len(bow_and_tie)>0):
+        log.info(' - '+', '.join(bow_and_tie))
+        bow_tie = [b.replace('bow and ', '') for b in bow_and_tie]
+        log.info('+ '+', '.join(bow_tie))
+        tags.append(*bow_tie)
     return tags

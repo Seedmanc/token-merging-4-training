@@ -25,4 +25,4 @@ def remove_series(tags): #remove separate tag with series if those are included 
 def alternate_costume(tags): #remove "official" from "alternate costume" since SD doesn't seem to profit from it
     return [t.replace('official alternate costume', 'alternate costume') for t in tags]
 
-#todo - bow and bowtie, fishnet(s),
+#todo - fishnet(s)
