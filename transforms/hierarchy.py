@@ -20,9 +20,26 @@ def replace_synonym(tags): #todo refactor, unused
     return [replacer(t) for t in tags]
 
 def _includes_or_plural(needle, haystack): # makes 'fishnets' be recognized as a part of 'fishnet pantyhose'
-    # TODO: bug: makes 'shorts' to be considered a part of 'short hair'
-    return haystack.endswith(' ' + needle) or haystack.startswith(needle + ' ') or\
-           (haystack+'s').endswith(' ' + needle) or haystack.startswith(re.sub('s$','',needle)+' ')
+    # Check if needle is a word within haystack (as prefix or suffix)
+    if haystack.endswith(' ' + needle) or haystack.startswith(needle + ' '):
+        return True
+    
+    # Handle plural forms more carefully
+    # Only consider plural if needle ends with 's' and removing 's' creates a valid match
+    if needle.endswith('s') and len(needle) > 1:
+        singular = needle[:-1]
+        # Check if singular form is in haystack (e.g., 'fishnet' in 'fishnet pantyhose' for needle 'fishnets')
+        if haystack.endswith(' ' + singular) or haystack.startswith(singular + ' '):
+            return True
+    
+    # Handle case where haystack might be singular and needle is looking for plural match
+    # Only if haystack + 's' would contain needle as a complete word
+    if not needle.endswith('s'):
+        plural_haystack = haystack + 's'
+        if plural_haystack.endswith(' ' + needle) or plural_haystack.startswith(needle + ' '):
+            return True
+    
+    return False
 
 def subsume(tags):
     log.debug(':SUBSUME')
