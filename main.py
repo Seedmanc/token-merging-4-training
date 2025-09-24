@@ -27,9 +27,11 @@ if __name__ == "__main__":
     for file_path in glob.glob(search_pattern):
         log.info("\nFILE: " + file_path.split('\\')[-1])
         input_tags = read_tags_from_file(file_path)
-        log.info(input_tags)
+        tags = ', '.join(input_tags)
+        log.info('TAGS: '+tags)
+        log.debug(f'~{utils.tokenizer(input_tags)} tokens in {len(input_tags)} tags and {len(tags)} characters')
         before = ','.join(input_tags)
         processed_tags = process_tags(input_tags)
         after = ','.join(processed_tags)
-        log.info(f"Saved ~{int((len(before) - len(after)) / 3.33)} tokens")
+        log.info(f"Saved ~{utils.tokenizer(input_tags) - utils.tokenizer(processed_tags)} tokens")
         write_tags_to_file(file_path, processed_tags)

@@ -24,3 +24,10 @@ def is_solo(tags): #heuristic whether there's only one character, sum the girl(s
         others = len([t for t in tags if re.match(r'\d\+?other(s)?',t)])
         onegirl = len([t for t in tags if t == '1girl'])
         return not (girls > 0 or (boys + onegirl + others) > 1)
+
+
+def tokenizer(tags): #coefficients found by Ridge regression
+    count = len(tags)
+    length = len(','.join(tags))
+    intercept = 3.7410189203217925
+    return round((0.75568025*count + 0.18637011 * length + intercept)*1.04)

@@ -1,7 +1,7 @@
 # Token Merging for Training (TM4T)
 
 [![Python Application](https://github.com/seedmanc/token-merging-4-training/actions/workflows/python-app.yml/badge.svg)](https://github.com/yourusername/token-merging-4-training/actions/workflows/python-app.yml)
-[![Python 3.10+](https://img.shields.io/badge/python-3.10+-blue.svg)](https://www.python.org/downloads/) 
+[![Python 3.8+](https://img.shields.io/badge/python-3.8+-blue.svg)](https://www.python.org/downloads/) 
 
 A Python tool designed to optimize and shorten Danbooru tags in image captions to save tokens during AI model training. This tool intelligently merges, filters, and consolidates tags while preserving semantic meaning, helping reduce token usage and improve training efficiency.
 

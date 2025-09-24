@@ -2,7 +2,7 @@ import logging as log
 import re
 from collections import defaultdict
 
-from utils import dicts, is_solo
+from utils import dicts, is_solo, tokenizer
 
 
 def merge(tags): #todo decide order: hair pink bow vs pink hair bow
@@ -23,9 +23,10 @@ def merge(tags): #todo decide order: hair pink bow vs pink hair bow
         if len(words) == 2:
             noun = words[-1]
             adj = words[0]
-            for t in tags:
-                if t != tag and t.endswith(noun) and len(t.split(' ')) == 2:
-                    tree[noun].append(adj)
+            if len(noun) > 3: # skip words like out or no
+                for t in tags:
+                    if t != tag and t.endswith(noun) and len(t.split(' ')) == 2:
+                        tree[noun].append(adj)
 
     for noun in tree.keys():
         tree[noun] = list(set(tree[noun]))
@@ -76,9 +77,9 @@ def multicolor(tags):
     multi = {'multicolored', 'two-tone'}
 
     for m in multi:
-        parts = [re.sub(m+r'\s(.+)',r'\1',t) for t in tags if t.startswith(m+' ')]
+        parts = [re.sub(re.escape(m)+r'\s(.+)',r'\1',t) for t in tags if t.startswith(m+' ')]
         removed_tags = [t for t in tags if t.split(' ')[0] in dicts['colors'] and t.split(' ')[-1] in parts]
-        if len(parts) > 0:
+        if len(removed_tags) > 0:
             log.info('- '+','.join(removed_tags)+'  b/c '+m)
         else:
             continue
@@ -94,17 +95,19 @@ def omit_parts(tags):
         animal = kemono.split(' ')[0]
         if animal in dicts['animals']:
             removed_tags = [t for t in tags if t.startswith(animal + ' ') and not t.endswith(' girl')]
-            tags = [t for t in tags if not t.startswith(animal + ' ') or t.endswith(' girl')]
-            log.info('- ' + (','.join(removed_tags)) + '  b/c  ' + kemono)
+            if len(removed_tags) > 0:
+                tags = [t for t in tags if not t.startswith(animal + ' ') or t.endswith(' girl')]
+                log.info('- ' + (','.join(removed_tags)) + '  b/c  ' + kemono)
     return tags
 
 def andjoin(tags):
     log.debug(':ANDJOIN')
+    tokens = tokenizer(tags)
     # yellow hair, yellow boots => yellow hair and boots #todo check if the confusion is worth the tokens saved
     tree = defaultdict(list)
     for t in tags:
         pair = t.split(' ')
-        if len(pair) == 2:
+        if len(pair) == 2 and len(pair[0]) > 3: #skip words like out or no
             tree[pair[0]].append(pair[1])
 
     for adj,nouns in tree.items():
@@ -119,6 +122,9 @@ def andjoin(tags):
                 log.info('+ '+ toadd)
             except Exception:
                 pass
+
+    saved = tokens - tokenizer(tags)
+    log.debug(f'&join saved {saved} tokens')
 
     bow_and_tie = [t for t in tags if t.endswith(' bow and bowtie') and 'hair bow' not in t]
     if (len(bow_and_tie)>0):

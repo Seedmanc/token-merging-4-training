@@ -2,12 +2,13 @@ from transforms.filters import remove_blacklisted, clip_after_series, remove_ser
 from utils import dicts
 
 def test_remove_blacklisted():
-    dicts['blacklist'] = ['blacklisted tag', 'another blacklisted']
-    processed = remove_blacklisted(['normal tag','blacklisted tag', 'another blacklisted', 'another normal'])
+    dicts['blacklist'] = ['blacklisted tag', 'startswith*', '*endswith' ]
+    processed = remove_blacklisted(['normal tag','blacklisted tag', 'startswith smth', 'another normal', 'smth endswith'])
     assert "normal tag" in processed
     assert "another normal" in processed
     assert "blacklisted tag" not in processed
-    assert "another another blacklisted" not in processed
+    assert "starts with smth" not in processed
+    assert "smth endswith" not in processed
 
 def test_clip_after_series():
     processed = clip_after_series(['normal tag','tag with (series)', 'tag with (two) (brackets)'])
