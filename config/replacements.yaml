@@ -1,0 +1,23 @@
+footwear:
+  - boots
+  - shoes
+  - geta
+eyewear:
+  - glasses
+  - goggles
+  - sunglasses
+  - monocle
+headwear:
+  - hat
+  - crown
+  - helmet
+bandages:
+  - bandaged
+frills:
+  - frilled
+hair ornament:
+  - hair flower
+star (sky):
+  - starry sky
+multicolored:
+  - two-tone

@@ -2,12 +2,14 @@ from transforms.redundancy import merge, multicolor, omit_parts, andjoin
 from utils import  dicts
 
 def test_merge():
-    tags = sorted(['long hair', 'white hair', 'very short hair', 'solo'])
+    tags = sorted(['long hair', 'white hair', 'very short hair', 'solo', 'dog ears', 'extra ears'])
     processed = merge(tags)
     assert "long white hair" in processed
     assert "long hair" not in processed
     assert "white hair" not in processed
     assert "very short hair" in processed
+    assert "extra ears" in processed
+    assert "dog extra ears" not in processed
     tags.remove('solo')
     tags.append('2girls')
     processed = merge(tags)
@@ -31,8 +33,10 @@ def test_omit_parts():
     assert 'other part' in processed
 
 def test_andjoin():
-    processed = andjoin(['yellow boots', 'yellow hair', 'shirt'])
+    processed = andjoin(['yellow boots', 'yellow hair', 'shirt', 'red bow and bowtie'])
     assert 'yellow boots' not in processed
     assert 'yellow hair' not in processed
     assert 'shirt' in processed
     assert 'yellow boots and hair' in processed
+    assert 'red bowtie' in processed
+    assert 'red bow and bowtie' not in processed

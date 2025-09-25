@@ -19,6 +19,8 @@ def merge(tags): #todo decide order: hair pink bow vs pink hair bow
         if '(' in tag:  # skip character names (usually have series in parenthesis)
             log.debug(f'skip  {tag}  b/c (...)')
             continue
+        if tag == 'extra ears':
+            continue
         words = tag.split(' ')
         if len(words) == 2:
             noun = words[-1]
@@ -30,15 +32,16 @@ def merge(tags): #todo decide order: hair pink bow vs pink hair bow
 
     for noun in tree.keys():
         tree[noun] = list(set(tree[noun]))
-        for adj in tree[noun]:
-            try:
-                tags.remove(adj + ' ' + noun)
-                log.info(' - ' + adj + ' ' + noun)
-            except Exception:
-                pass
-        merged = sorted(list(set(tree[noun])))
-        log.info('+ ' + ' '.join(merged) + ' ' + noun)
-        tags.append(' '.join(merged) + ' ' + noun)
+        if len(tree[noun]) > 1:
+            for adj in tree[noun]:
+                try:
+                    tags.remove(adj + ' ' + noun)
+                    log.info(' - ' + adj + ' ' + noun)
+                except Exception:
+                    pass
+            merged = sorted(list(set(tree[noun])))
+            log.info('+ ' + ' '.join(merged) + ' ' + noun)
+            tags.append(' '.join(merged) + ' ' + noun)
 
     return tags
 
@@ -129,6 +132,11 @@ def andjoin(tags):
     bow_and_tie = [t for t in tags if t.endswith(' bow and bowtie') and 'hair bow' not in t]
     if (len(bow_and_tie)>0):
         log.info(' - '+', '.join(bow_and_tie))
+        for i in bow_and_tie:
+            try:
+                tags.remove(i)
+            except Exception:
+                pass
         bow_tie = [b.replace('bow and ', '') for b in bow_and_tie]
         log.info('+ '+', '.join(bow_tie))
         tags.append(*bow_tie)

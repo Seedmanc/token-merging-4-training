@@ -3,10 +3,10 @@ from pipeline import process_tags
 
 
 def test_pipeline():
-    for name in ['blacklist', 'synonyms', 'colors', 'animals']:
+    for name in ['blacklist', 'replacements', 'colors', 'animals']:
         utils.load_yaml_config(name)
     tags = ["long hair", "hair", "white hair", "commentary request", "red shirt", "sleeveless shirt",'official alternate costume',
-     "multicolored shirt", "dog tail", "dog girl", "animal tail", "serval (kemono friends) (derp)", "kemono friends", 'solo']
+      "multicolored shirt", "dog tail", "dog girl", "animal tail", "serval (kemono friends) (derp)", "kemono friends", 'solo']
     processed = process_tags(tags)
     assert "commentary request" not in processed
     assert "long white hair" in processed

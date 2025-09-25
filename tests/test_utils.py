@@ -2,7 +2,7 @@ import os
 import pathlib
 import random
 
-from utils import dicts, load_yaml_config, is_solo
+from utils import dicts, load_yaml_config, is_solo, get_series_candidates
 
 
 def test_load_yaml_config():
@@ -21,3 +21,9 @@ def test_is_solo():
     assert is_solo(['1girl']) == True
     assert is_solo(['2girls']) == False
     assert is_solo(['1girl','1other']) == False
+    assert is_solo(['serval (kemono friends)', 'kemono friends', 'kaban (kemono friends)']) == False
+
+def test_series_candidates():
+    processed = get_series_candidates(['serval (kemono friends)', 'kemono friends', 'character (missing series)'])
+    assert 'kemono friends' in processed
+    assert 'missing series' not in processed

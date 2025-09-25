@@ -21,17 +21,24 @@ def write_tags_to_file(filename, tags):
 
 if __name__ == "__main__":
     utils.setup_logging('DEBUG')
-    for name in ['blacklist', 'synonyms', 'colors', 'animals']:
+    for name in ['blacklist', 'replacements', 'colors', 'animals']:
         utils.load_yaml_config(name)
     search_pattern = sys.argv[1] + "\\*.txt"
+    original = 0
+    saved_total = 0
     for file_path in glob.glob(search_pattern):
         log.info("\nFILE: " + file_path.split('\\')[-1])
         input_tags = read_tags_from_file(file_path)
         tags = ', '.join(input_tags)
-        log.info('TAGS: '+tags)
-        log.debug(f'~{utils.tokenizer(input_tags)} tokens in {len(input_tags)} tags and {len(tags)} characters')
+        log.debug('TAGS: '+tags)
+        original_length = utils.tokenizer(input_tags)
+        original += original_length
+        log.debug(f'~{original_length} tokens in {len(input_tags)} tags and {len(tags)} characters')
         before = ','.join(input_tags)
         processed_tags = process_tags(input_tags)
         after = ','.join(processed_tags)
-        log.info(f"Saved ~{utils.tokenizer(input_tags) - utils.tokenizer(processed_tags)} tokens")
+        saved = utils.tokenizer(input_tags) - utils.tokenizer(processed_tags)
+        saved_total += saved
+        log.info(f"Saved ~{saved} tokens or {round(saved * 100 / original_length)}%")
         write_tags_to_file(file_path, processed_tags)
+    log.info(f'\nAVG saved: {round(saved_total * 100 / original)}%')

@@ -1,16 +1,20 @@
 import logging as log
 import re
 
-from utils import dicts
+from utils import dicts, get_series_candidates
 
 
 def remove_blacklisted(tags): #remove blacklisted tags supporting wildcards *
-    tags = [tag for tag in tags if tag not in dicts['blacklist']]
+    log.debug(':BLACKLIST')
+    removed = [tag for tag in tags if tag in dicts['blacklist']]
     for b in dicts['blacklist']:
         if b.startswith('*'):
-            tags = [t for t in tags if not t.endswith(b[1:])]
+            removed += [t for t in tags if t.endswith(b[1:])]
         elif b.endswith('*'):
-            tags = [t for t in tags if not t.startswith(b[:-1])]
+            removed += [t for t in tags if t.startswith(b[:-1])]
+    if (len(removed) > 0):
+        log.info('- '+','.join(removed)+'  b/c blacklist')
+        tags = [t for t in tags if t not in removed]
     return tags
 
 
@@ -20,7 +24,7 @@ def clip_after_series(tags):  # remove after first group of () removing fan char
 
 def remove_series(tags): #remove separate tag with series if those are included in character tags
     log.debug(':SERIES')
-    series_candidates = [re.sub(r'.+\((.+)\)$', r'\1', t) for t in tags if t.endswith(')') and '(' in t]
+    series_candidates = get_series_candidates(tags)
     for s in series_candidates:
         removed_tags = [t for t in tags if t == s or re.match(re.escape(s)+'\\s\\d', t)]
         if len(removed_tags) > 0:

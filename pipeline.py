@@ -7,9 +7,9 @@ from transforms.redundancy import merge, omit_parts, multicolor, andjoin
 
 def process_tags(tags):
     pipeline = [
-        remove_blacklisted, clip_after_series, remove_series,
+        remove_blacklisted, clip_after_series, alternate_costume,
         #replace_synonym,
         subsume, specify_animal, omit_parts, multicolor,
-        merge, andjoin, alternate_costume#, join
+        merge, remove_series, andjoin#, join
     ]
     return reduce(lambda t,f: f(t), pipeline, tags)

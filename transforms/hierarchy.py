@@ -31,7 +31,7 @@ def subsume(tags):
     kept_tags = []
     for tag in tags:
         found = [t for t in tags if _includes_or_plural(tag, t)]
-        if len(found) > 0 and ' ' not in tag:
+        if len(found) > 0:
             log.info(f'- {tag}  b/c  {found[0]}')
         else:
             kept_tags.append(tag)
