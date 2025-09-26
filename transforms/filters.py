@@ -13,7 +13,7 @@ def remove_blacklisted(tags): #remove blacklisted tags supporting wildcards *
         elif b.endswith('*'):
             removed += [t for t in tags if t.startswith(b[:-1])]
     if (len(removed) > 0):
-        log.info('- '+','.join(removed)+'  b/c blacklist')
+        log.info('- '+','.join(removed))
         tags = [t for t in tags if t not in removed]
     return tags
 

@@ -2,7 +2,7 @@ import os
 import pathlib
 import random
 
-from utils import dicts, load_yaml_config, is_solo, get_series_candidates
+from utils import dicts, load_yaml_config, is_solo, get_series_candidates, part_of
 
 
 def test_load_yaml_config():
@@ -27,3 +27,8 @@ def test_series_candidates():
     processed = get_series_candidates(['serval (kemono friends)', 'kemono friends', 'character (missing series)'])
     assert 'kemono friends' in processed
     assert 'missing series' not in processed
+
+def test_part_of():
+    assert part_of('word', 'and word') == True
+    assert part_of('word', 'more,words') == True
+    assert part_of('word', 'subword') == False

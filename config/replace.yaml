@@ -13,11 +13,21 @@ headwear:
   - helmet
 bandages:
   - bandaged
-frills:
-  - frilled
 hair ornament:
   - hair flower
 star (sky):
   - starry sky
 multicolored:
   - two-tone
+cup:
+  - teacup
+  - coffee cup
+bag:
+ - backpack
+ - rucksack
+bow:
+  - bowtie
+one eye closed:
+  - wink
+hoodie:
+  - hood

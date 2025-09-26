@@ -9,6 +9,8 @@ dicts = dict()
 def setup_logging(level='INFO'):
     log.basicConfig(level=getattr(log, level), format='%(message)s')
 
+def part_of(needle, haystack):
+    return f' {needle}' in haystack or f',{needle}' in haystack
 
 def load_yaml_config(file):
     ROOT = pathlib.Path(__file__).resolve().parent

@@ -21,7 +21,7 @@ def write_tags_to_file(filename, tags):
 
 if __name__ == "__main__":
     utils.setup_logging('DEBUG')
-    for name in ['blacklist', 'replacements', 'colors', 'animals']:
+    for name in ['blacklist', 'replace', 'colors', 'animals']:
         utils.load_yaml_config(name)
     search_pattern = sys.argv[1] + "\\*.txt"
     original = 0

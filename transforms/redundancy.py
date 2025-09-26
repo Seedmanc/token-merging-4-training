@@ -135,6 +135,7 @@ def andjoin(tags):
         for i in bow_and_tie:
             try:
                 tags.remove(i)
+                log.debug("DERP")
             except Exception:
                 pass
         bow_tie = [b.replace('bow and ', '') for b in bow_and_tie]
