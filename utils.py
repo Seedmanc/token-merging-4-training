@@ -6,7 +6,12 @@ import yaml
 
 dicts = dict()
 
-def setup_logging(level='INFO'):
+def setup_logging(args):
+    level = 'INFO'
+    if args.brief:
+        level = 'WARN'
+    elif args.verbose:
+        level = 'DEBUG'
     log.basicConfig(level=getattr(log, level), format='%(message)s')
 
 def part_of(needle, haystack):
