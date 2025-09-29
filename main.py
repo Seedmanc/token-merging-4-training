@@ -1,18 +1,11 @@
-import argparse
 import glob
 import logging as log
 import re
 
 import utils
+from args import args
 from pipeline import process_tags
 
-parser = argparse.ArgumentParser()
-parser.add_argument("--dry", action="store_true", help='Don\'t change the files')
-
-group = parser.add_mutually_exclusive_group()
-group.add_argument("--brief", action="store_true", help='Reduce console spam')
-group.add_argument("--verbose", action="store_true")
-parser.add_argument('captions_path')
 
 def read_tags_from_file(filename):
     with open(filename, "r", encoding="utf-8") as f:
@@ -22,7 +15,6 @@ def read_tags_from_file(filename):
 def write_tags_to_file(filename, tags):
     log.info(sorted(tags))
     if args.dry:
-        log.warning('\nDry run, no files changed.')
         return tags
     else:
         with open(filename, "w", encoding="utf-8") as f:
@@ -30,11 +22,14 @@ def write_tags_to_file(filename, tags):
 
 
 if __name__ == "__main__":
-    args = parser.parse_known_args()[0]
     utils.setup_logging(args)
     for name in ['blacklist', 'replace', 'colors', 'animals']:
         utils.load_yaml_config(name)
-    search_pattern = args.captions_path + "\\*.txt"
+    try:
+        search_pattern = args.captions_path + "\\*.txt"
+    except Exception:
+        log.error('Missing captions path argument.')
+        exit(1) #dumb pytest forces me to use this nonsense instead of making captions required
     original = 0
     saved_total = 0
     for file_path in glob.glob(search_pattern):
@@ -53,3 +48,5 @@ if __name__ == "__main__":
         log.warning(f"Saved ~{saved} tokens or {round(saved * 100 / original_length)}%")
         write_tags_to_file(file_path, processed_tags)
     log.warning(f'\nAVG savings: {round(saved_total * 100 / original)}%')
+    if args.dry:
+        log.warning('\nDry run, no files changed.')

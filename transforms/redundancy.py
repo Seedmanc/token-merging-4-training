@@ -39,7 +39,7 @@ def merge(tags): #todo decide order: hair pink bow vs pink hair bow
                     log.info(' - ' + adj + ' ' + noun)
                 except Exception:
                     pass
-            merged = sorted(list(set(tree[noun])))
+            merged = sorted(list(set([t for t in tree[noun] if 'alternate' != t or noun != 'costume'])))
             log.info('+ ' + ' '.join(merged) + ' ' + noun)
             tags.append(' '.join(merged) + ' ' + noun)
 
@@ -83,7 +83,7 @@ def multicolor(tags):
         parts = [re.sub(re.escape(m)+r'\s(.+)',r'\1',t) for t in tags if t.startswith(m+' ')]
         removed_tags = [t for t in tags if t.split(' ')[0] in dicts['colors'] and t.split(' ')[-1] in parts]
         if len(removed_tags) > 0:
-            log.info('- '+','.join(removed_tags)+'  b/c '+m)
+            log.info('- '+','.join(removed_tags)+'  b/c  '+m)
         else:
             continue
         tags = [t for t in tags if t not in removed_tags]
@@ -97,7 +97,7 @@ def omit_parts(tags):
     for kemono in found_animals:
         animal = kemono.split(' ')[0]
         if animal in dicts['animals']:
-            removed_tags = [t for t in tags if t.startswith(animal + ' ') and not t.endswith(' girl')]
+            removed_tags = [t for t in tags if t.startswith(animal + ' ') and not t.endswith(' girl') and '(' not in t]
             if len(removed_tags) > 0:
                 tags = [t for t in tags if not t.startswith(animal + ' ') or t.endswith(' girl')]
                 log.info('- ' + (','.join(removed_tags)) + '  b/c  ' + kemono)
@@ -116,7 +116,6 @@ def andjoin(tags):
     for adj,nouns in tree.items():
         if (len(nouns) == 2):
             try:
-                toremove = ' '.join(nouns)
                 tags.remove(adj+' '+nouns[0])
                 tags.remove(adj+' '+nouns[1])
                 log.info(' - '+adj+' '+nouns[0]+','+adj+' '+nouns[1])

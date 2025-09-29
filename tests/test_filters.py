@@ -1,5 +1,7 @@
-from transforms.filters import remove_blacklisted, clip_after_series, remove_series, alternate_costume
+from args import args
+from transforms.filters import remove_blacklisted, clip_after_series, remove_series, alternate_costume, author_style
 from utils import dicts
+
 
 def test_remove_blacklisted():
     dicts['blacklist'] = ['blacklisted tag', 'startswith*', '*endswith' ]
@@ -27,3 +29,21 @@ def test_remove_series():
 def test_alternate_costume():
     processed = alternate_costume(['official alternate costume'])
     assert processed[0] == 'alternate costume'
+
+def test_author_style():
+    proc = author_style(['test author (tag)'])
+    assert 'test author (tag)' in proc
+
+    args.author = 'test author (tag)'
+    proc = author_style(['test author (tag)'])
+    assert 'test author (tag)' not in proc
+    assert 'testauthortag style' in proc
+
+    args.class_tokens = ''
+    proc = author_style(['test author (tag)'])
+    assert len(proc) == 0
+
+    args.class_tokens = 'testing'
+    proc = author_style(['test author (tag)'])
+    assert 'test author (tag)' not in proc
+    assert 'testing style' in proc

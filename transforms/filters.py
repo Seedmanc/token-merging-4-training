@@ -1,6 +1,7 @@
 import logging as log
 import re
 
+from args import args
 from utils import dicts, get_series_candidates
 
 
@@ -34,5 +35,33 @@ def remove_series(tags): #remove separate tag with series if those are included 
 
 def alternate_costume(tags): #remove "official" from "alternate costume" since SD doesn't seem to profit from it
     return [t.replace('official alternate costume', 'alternate costume') for t in tags]
+
+def author_style(tags):
+    log.debug(':AUTHOR')
+    if args.author != None:
+        striped = re.sub(r'\s|\)|\(', '', args.author)
+        if any([t for t in tags if t == args.author]):
+            log.debug('--author found')
+            if args.class_tokens == None:
+                tags = [re.sub(r'\s|\)|\(', '', t) + ' style' if t == args.author else t for t in tags ]
+                log.info(f"{args.author}  =>  "+striped+" style  b/c  no --class-tokens")
+            elif args.class_tokens != '':
+                tags = [re.sub(re.escape(args.author), args.class_tokens + ' style', t) if t == args.author else t for t in tags]
+                log.info(f"{args.author}  =>  {args.class_tokens} style  b/c  --class-tokens")
+            else:
+                tags = [t for t in tags if t != args.author]
+                log.info(f"- {args.author}  b/c  --class-tokens empty")
+        elif args.class_tokens == '':
+            pass
+        elif args.class_tokens not in [None,'']:
+            tags.append(f'{args.class_tokens} style')
+            log.info(f'+ {args.class_tokens} style  b/c  no --author in tags')
+        elif args.class_tokens == None:
+            tags.append(f'{striped} style')
+            log.info(f'+ {striped} style  b/c  no --author in tags & no --class-tokens')
+    elif args.class_tokens not in [None, '']:
+        log.warning('Missing --author, --class-tokens ignored.')
+
+    return tags
 
 #todo - fishnet(s)

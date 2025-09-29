@@ -1,13 +1,13 @@
 from functools import reduce
 
-from transforms.filters import remove_blacklisted, clip_after_series, remove_series, alternate_costume
+from transforms.filters import remove_blacklisted, clip_after_series, remove_series, alternate_costume, author_style
 from transforms.hierarchy import subsume, specify_animal, replace
 from transforms.redundancy import merge, omit_parts, multicolor, andjoin
 
 
 def process_tags(tags):
     pipeline = [
-        remove_blacklisted, clip_after_series, alternate_costume,
+        remove_blacklisted, clip_after_series, author_style, alternate_costume,
         replace,
         subsume, specify_animal, omit_parts, multicolor,
         merge, remove_series, andjoin#, join
