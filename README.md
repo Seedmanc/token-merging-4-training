@@ -125,6 +125,16 @@ Removes colored tags if multicolored/two-tone tag of the same subject is present
 # ... more animals
 ```
 Removes literal "animal part" if specific animal parts are present. Removes specific animal parts if that animal girl is present.
+### `config/replace.yaml`
+```yaml
+eyewear:
+   - glasses
+   - goggles
+   - sunglasses
+   - monocle
+# ... more generic tags paired with a list of concrete ones
+```
+Replaces generic tag with one of the concrete ones if the concrete is also present. If instead of the list there is a string like "one eye closed: wink" then replaces unconditionally.
 
 ## Contact/Support
 

@@ -28,13 +28,14 @@ bag:
 bow:
   - bowtie
 one eye closed:
-  - wink
+  wink
 hoodie:
   - hood
 short sleeves:
   - short over long sleeves
 chinese clothes:
   - china dress
+  - cheongsam
 monochrome:
   - grayscale
 dark skin:
@@ -44,5 +45,15 @@ reptile:
 stomach:
   - midriff
   - navel
+navel:
+  - midriff
 clothes:
   - jacket
+  - sweater
+  - shirt
+huge breasts:
+  - gigantic breasts
+large breasts:
+  - huge breasts
+sleeves past wrists:
+  - sleeves past fingers

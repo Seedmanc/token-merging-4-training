@@ -9,15 +9,20 @@ def replace(tags):
     # brown footwear, boots => brown boots, boots
     joint = ','.join(tags)
     def replacer(tag):
-        if len(tag.split(' ')) > 3: #skip long tags, likely natural language
+        if len(tag.split(' ')) > 3: #skip long multiword tags, likely natural language
             return tag
         for key, values in dicts['replace'].items():
-             found = [v for v in values if part_of(key, joint) and part_of(v, joint)]
-             if len(found) > 0:
-                tag2 = re.sub(r'(^|\s)('+re.escape(key)+r')(\s|$)', r'\1'+found[0]+r'\3', tag)
-                if tag2 != tag:
-                    log.info(tag+'  =>  ' +tag2)
-                    return tag2
+            if isinstance(values, str):     # singular values are for unconditional substitution
+                if tag == key:
+                    log.info(f"{tag}  =>  {values}")
+                    return values
+            else:                           # otherwise check if a substitute is also present in tags
+                found = [v for v in values if part_of(key, joint) and part_of(v, joint)]
+                if len(found) > 0:
+                    tag2 = re.sub(r'(^|\s)('+re.escape(key)+r')(\s|$)', r'\1'+found[0]+r'\3', tag)
+                    if tag2 != tag:
+                        log.info(tag+'  =>  ' +tag2)
+                        return tag2
         return tag
     return list(set([replacer(t) for t in tags]))
 

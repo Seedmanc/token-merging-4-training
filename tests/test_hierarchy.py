@@ -20,7 +20,9 @@ def test_specify_animal():
 
 
 def test_replace():
-    dicts['replace'] = {'footwear': ['boots']}
-    proc = replace(['brown footwear', 'boots', 'a long sentence about footwear'])
+    dicts['replace'] = {'footwear': ['boots'], 'one eye closed': 'wink'}
+    proc = replace(['brown footwear', 'boots', 'a long sentence about footwear', 'one eye closed'])
     assert 'brown boots' in proc
     assert 'a long sentence about footwear' in proc
+    assert 'wink' in proc
+    assert 'one eye closed' not in proc
