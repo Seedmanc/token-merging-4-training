@@ -18,7 +18,6 @@ def remove_blacklisted(tags): #remove blacklisted tags supporting wildcards *
         tags = [t for t in tags if t not in removed]
     return tags
 
-
 def clip_after_series(tags):  # remove after first group of () removing fan chars' authors like "name (series) (author)"
     return [re.sub(r'(\(.+\))\s.+', r'\1', tag) for tag in tags]
 
@@ -41,7 +40,6 @@ def author_style(tags):
     if args.author != None:
         striped = re.sub(r'\s|\)|\(', '', args.author)
         if any([t for t in tags if t == args.author]):
-            log.debug('--author found')
             if args.class_tokens == None:
                 tags = [re.sub(r'\s|\)|\(', '', t) + ' style' if t == args.author else t for t in tags ]
                 log.info(f"{args.author}  =>  "+striped+" style  b/c  no --class-tokens")

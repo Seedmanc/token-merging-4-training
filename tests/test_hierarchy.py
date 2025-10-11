@@ -1,4 +1,4 @@
-from transforms.hierarchy import subsume, specify_animal, replace
+from transforms.hierarchy import subsume, specify_animal, replace, _includes_or_plural
 from utils import dicts
 
 def test_subsume():
@@ -26,3 +26,8 @@ def test_replace():
     assert 'a long sentence about footwear' in proc
     assert 'wink' in proc
     assert 'one eye closed' not in proc
+
+def test_includes_or_plural():
+    assert _includes_or_plural('starts', 'starts with') == True
+    assert _includes_or_plural('with', 'ends with') == True
+    assert _includes_or_plural('middle skipped', 'middle word skipped') == True

@@ -126,7 +126,8 @@ def andjoin(tags):
                 pass
 
     saved = tokens - tokenizer(tags)
-    log.debug(f'&join saved {saved} tokens')
+    if saved > 0:
+        log.debug(f'&join saved {saved} tokens')
 
     bow_and_tie = [t for t in tags if t.endswith(' bow and bowtie') and 'hair bow' not in t]
     if (len(bow_and_tie)>0):

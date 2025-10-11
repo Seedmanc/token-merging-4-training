@@ -27,13 +27,14 @@ def replace(tags):
     return list(set([replacer(t) for t in tags]))
 
 def _includes_or_plural(needle, haystack): # makes 'fishnets' be recognized as a part of 'fishnet pantyhose'
-    # TODO: bug: makes 'shorts' to be considered a part of 'short hair'
-    return haystack.endswith(' ' + needle) or haystack.startswith(needle + ' ') #or\
+    return haystack.endswith(' ' + needle) or haystack.startswith(needle + ' ') or\
+        len(needle.split(' ')) == 2 and len(haystack.split(' ')) == 3 and needle == re.sub(r'\s.+\s',' ',haystack) # skip middle word
+        #or\ TODO: bug: makes 'shorts' to be considered a part of 'short hair'
            #(haystack+'s').endswith(' ' + needle) or haystack.startswith(re.sub('s$','',needle)+' ')
 
 def subsume(tags):
     log.debug(':SUBSUME')
-    """Remove single-word tags that are suffixes or prefixes of other tags."""
+    """Remove tags that are suffixes or prefixes of other tags."""
     tags = list(set(tags))
     kept_tags = []
     for tag in tags:

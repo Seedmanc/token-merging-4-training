@@ -9,8 +9,11 @@ from pipeline import process_tags
 
 def read_tags_from_file(filename):
     with open(filename, "r", encoding="utf-8") as f:
-        return sorted([tag.strip().lower().replace('_', ' ') for tag in re.split(r'\s*,\s*', f.read()) if tag != ''])
-
+        raw = f.read()
+        if '\n' in raw and ',' not in raw: # tags were copied from danbooru's edit field
+            log.debug('raw danbooru format detected, converting')
+            raw = raw.replace('\n', ' ').replace(' ', ',')
+        return sorted([tag.strip().lower().replace('_', ' ') for tag in re.split(r'\s*,\s*', raw) if tag != ''])
 
 def write_tags_to_file(filename, tags):
     log.info(sorted(tags))

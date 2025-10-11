@@ -12,3 +12,12 @@ def test_read_tags_from_file():
     tags = read_tags_from_file(test_file_name)
     os.remove(test_file_name)
     assert 'caps, etc, no spa ce, shift' == ', '.join(tags)
+
+def test_read_tags_from_file_raw():
+    test_file_name = 'test'+str(random.random())+'.txt'
+    with open(test_file_name, "w", encoding="utf-8") as f:
+      f.write('upper_row\nbottom\nmore tags')
+
+    tags = read_tags_from_file(test_file_name)
+    os.remove(test_file_name)
+    assert 'bottom, more, tags, upper row' == ', '.join(tags)
